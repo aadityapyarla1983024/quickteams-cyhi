@@ -22,7 +22,7 @@ const theme = createTheme({
       main: "#EF4444", // red
     },
     background: {
-      default: "#0c0f26", // 🔥 dark navy (modern bg)
+      default: "#0d0f27", // 🔥 dark navy (modern bg)
       paper: "#1E293B", // slightly lighter gray for cards
     },
     text: {
@@ -62,5 +62,16 @@ const theme = createTheme({
     },
   },
 });
+// theme.components = {
+//   MuiCssBaseline: {
+//     styleOverrides: {
+//       body: {
+//         background: "linear-gradient(160deg, #0f172a 0%, #1e293b 50%, #2563eb 100%)",
+
+//         minHeight: "100vh",
+//       },
+//     },
+//   },
+// };
 
 export default theme;

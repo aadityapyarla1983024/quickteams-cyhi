@@ -5,9 +5,9 @@ import { getAuth, updateProfile } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, Stack, TextField } from "@mui/material";
-import MultipleSelectChip from "../components/chipinput";
 import { onAuthStateChanged } from "firebase/auth";
 import BioInput from "../components/bioinput";
+import TeamMatchAutocomplete from "../components/chipinput";
 
 export default function InitialProfileForm() {
   const [avatarSrc, setAvatarSrc] = React.useState(undefined);
@@ -111,13 +111,11 @@ export default function InitialProfileForm() {
         <TextField id="email" value={userData.email} label="Email" disabled variant="outlined" />
         <BioInput handleSubmit={onSubmit} />
         <Stack spacing={2}>
-          <MultipleSelectChip handleSubmit={onSubmit} name="Skills" />
-          <MultipleSelectChip handleSubmit={onSubmit} name="Strengths" />
+          <TeamMatchAutocomplete handleSubmit={onSubmit} name="Skills" />
         </Stack>
         <Stack>
           <Button
             onClick={(e) => {
-              console.log(userData);
               navigate("/homepage");
             }}
             sx={{ width: "45%", mx: "auto" }}

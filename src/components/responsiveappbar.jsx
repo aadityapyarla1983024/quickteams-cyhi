@@ -28,7 +28,7 @@ function ResponsiveAppBar({ toggleDrawer }) {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ backgroundColor: "#000" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -49,7 +49,6 @@ function ResponsiveAppBar({ toggleDrawer }) {
           >
             LOGO
           </Typography>
-
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -67,7 +66,7 @@ function ResponsiveAppBar({ toggleDrawer }) {
             variant="h5"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/homepage"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -89,6 +88,7 @@ function ResponsiveAppBar({ toggleDrawer }) {
             </Tooltip>
             <Menu
               sx={{ mt: "45px" }}
+              R
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{

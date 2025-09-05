@@ -9,21 +9,28 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
+import { Fragment } from "@emotion/react/jsx-runtime";
 
 export default function DropDownNav({ open, toggleDrawer }) {
   const DrawerList = (
-    <Box sx={{ width: "100vw", height: "100%" }} role="presentation" onClick={toggleDrawer(false)}>
+    <Box
+      sx={{ width: "100vw", height: "100%", backgroundColor: "black" }}
+      role="presentation"
+      onClick={toggleDrawer(false)}
+    >
       <List>
         {["Browse Teams", "Float Team", "Events"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
+          <Fragment>
+            <ListItem key={text}>
+              <ListItemButton>
+                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </ListItem>
+            <Divider />
+          </Fragment>
         ))}
       </List>
-      <Divider />
       {/* <List>
         {["All mail", "Trash", "Spam"].map((text, index) => (
           <ListItem key={text} disablePadding>
@@ -39,7 +46,12 @@ export default function DropDownNav({ open, toggleDrawer }) {
 
   return (
     <div>
-      <Drawer open={open} anchor="left" onClose={toggleDrawer(false)}>
+      <Drawer
+        sx={{ backgroundColor: "black" }}
+        open={open}
+        anchor="left"
+        onClose={toggleDrawer(false)}
+      >
         {DrawerList}
       </Drawer>
     </div>
