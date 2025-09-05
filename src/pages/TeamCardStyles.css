@@ -1,0 +1,51 @@
+.elegant-container {
+  width: 100%;
+  margin-top: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.elegant-card {
+  width: 450px;
+  border-radius: 20px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(135deg, #e0f7fa, #e1bee7) !important;
+  padding: 24px;
+  color: black !important;
+  transition: transform 0.3s ease;
+}
+
+.elegant-card:hover {
+  transform: translateY(-5px);
+}
+
+.team-title {
+  font-weight: 700;
+  color: Black;
+  text-align: center;
+}
+
+.event-title {
+  text-align: center;
+  color: #7b1fa2;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.chip-label {
+  font-weight: 600;
+  color: royalblue;
+}
+
+.chip-skill {
+  background-color: grey;
+  color: Black;
+  font-weight: 500;
+}
+
+.chip-strength {
+  background-color: grey;
+  color: royalblue;
+  font-weight: 500;
+}

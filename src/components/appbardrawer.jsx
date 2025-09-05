@@ -12,9 +12,9 @@ import MailIcon from "@mui/icons-material/Mail";
 
 export default function DropDownNav({ open, toggleDrawer }) {
   const DrawerList = (
-    <Box sx={{ width: "100vw" }} role="presentation" onClick={toggleDrawer(false)}>
+    <Box sx={{ width: "100vw", height: "100%" }} role="presentation" onClick={toggleDrawer(false)}>
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+        {["Browse Teams", "Float Team", "Events"].map((text, index) => (
           <ListItem key={text} disablePadding>
             <ListItemButton>
               <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
@@ -24,7 +24,7 @@ export default function DropDownNav({ open, toggleDrawer }) {
         ))}
       </List>
       <Divider />
-      <List>
+      {/* <List>
         {["All mail", "Trash", "Spam"].map((text, index) => (
           <ListItem key={text} disablePadding>
             <ListItemButton>
@@ -33,13 +33,13 @@ export default function DropDownNav({ open, toggleDrawer }) {
             </ListItemButton>
           </ListItem>
         ))}
-      </List>
+      </List> */}
     </Box>
   );
 
   return (
     <div>
-      <Drawer open={open} anchor="top" onClose={toggleDrawer(false)}>
+      <Drawer open={open} anchor="left" onClose={toggleDrawer(false)}>
         {DrawerList}
       </Drawer>
     </div>
