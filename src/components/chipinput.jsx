@@ -15,10 +15,19 @@ import { skillsList, strengthsList } from "../components/skillsandstrengths.js";
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-export default function TeamMatchAutocomplete({ handleSubmit }) {
+export default function TeamMatchAutocomplete({
+  handleChange,
+  initialValueSkills,
+  initialValueStrengths,
+}) {
   const [selectedSkills, setSelectedSkills] = React.useState([]);
   const [selectedStrengths, setSelectedStrengths] = React.useState([]);
-  console.log(skillsList, strengthsList);
+
+  React.useEffect(() => {
+    setSelectedSkills(initialValueSkills || []);
+    setSelectedStrengths(initialValueStrengths || []);
+  }, [initialValueSkills, initialValueStrengths]);
+
   return (
     <Box
       sx={{
@@ -43,28 +52,35 @@ export default function TeamMatchAutocomplete({ handleSubmit }) {
           value={selectedSkills}
           onChange={(event, newValue) => {
             setSelectedSkills(newValue);
-            handleSubmit("skills", selectedSkills);
+            handleChange("skillsRequired", newValue);
           }}
-          renderOption={(props, option, { selected }) => (
-            <li {...props}>
-              <Checkbox
-                icon={icon}
-                checkedIcon={checkedIcon}
-                style={{ marginRight: 8 }}
-                checked={selected}
-              />
-              <ListItemText primary={option} />
-            </li>
-          )}
+          renderOption={(props, option, { selected }) => {
+            const { key, ...rest } = props;
+            return (
+              <li key={key} {...rest}>
+                <Checkbox
+                  icon={icon}
+                  checkedIcon={checkedIcon}
+                  style={{ marginRight: 8 }}
+                  checked={selected}
+                />
+                <ListItemText primary={option} />
+              </li>
+            );
+          }}
           renderTags={(value, getTagProps) =>
-            value.map((option, index) => (
-              <Chip
-                variant="filled"
-                label={option}
-                {...getTagProps({ index })}
-                sx={{ fontWeight: 500 }}
-              />
-            ))
+            value.map((option, index) => {
+              const { key, ...rest } = getTagProps({ index });
+              return (
+                <Chip
+                  key={key}
+                  variant="filled"
+                  label={option}
+                  {...rest}
+                  sx={{ fontWeight: 500 }}
+                />
+              );
+            })
           }
           renderInput={(params) => (
             <TextField
@@ -85,28 +101,35 @@ export default function TeamMatchAutocomplete({ handleSubmit }) {
           value={selectedStrengths}
           onChange={(event, newValue) => {
             setSelectedStrengths(newValue);
-            handleSubmit("strengths", selectedStrengths);
+            handleChange("strengthsRequired", newValue);
           }}
-          renderOption={(props, option, { selected }) => (
-            <li {...props}>
-              <Checkbox
-                icon={icon}
-                checkedIcon={checkedIcon}
-                style={{ marginRight: 8 }}
-                checked={selected}
-              />
-              <ListItemText primary={option} />
-            </li>
-          )}
+          renderOption={(props, option, { selected }) => {
+            const { key, ...rest } = props;
+            return (
+              <li key={key} {...rest}>
+                <Checkbox
+                  icon={icon}
+                  checkedIcon={checkedIcon}
+                  style={{ marginRight: 8 }}
+                  checked={selected}
+                />
+                <ListItemText primary={option} />
+              </li>
+            );
+          }}
           renderTags={(value, getTagProps) =>
-            value.map((option, index) => (
-              <Chip
-                variant="outlined"
-                label={option}
-                {...getTagProps({ index })}
-                sx={{ fontWeight: 500 }}
-              />
-            ))
+            value.map((option, index) => {
+              const { key, ...rest } = getTagProps({ index });
+              return (
+                <Chip
+                  key={key}
+                  variant="filled"
+                  label={option}
+                  {...rest}
+                  sx={{ fontWeight: 500 }}
+                />
+              );
+            })
           }
           renderInput={(params) => (
             <TextField

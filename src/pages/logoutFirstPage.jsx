@@ -1,41 +1,68 @@
 import React, { Fragment } from "react";
 import { Stack, Button } from "@mui/material";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { toast } from "react-toastify";
-import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { db } from "../firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { toast, ToastContainer } from "react-toastify";
+import { useAuth } from "../contexts/AuthContext";
 
+// Google provider setup
 const provider = new GoogleAuthProvider();
 
-export default function LogoutFirstPage({ app }) {
+export default function LogoutFirstPage() {
+  const auth = getAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
-  const auth = getAuth(app);
-  const onGoogleSignIn = () => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        toast.success("User logged in successfuly");
-        const user = result.user;
-        console.log(user);
-        navigate("/createnewprofile", { state: {} });
-      })
-      .catch((error) => {
-        toast.error(error.message);
-        console.log(error);
-      });
+
+  React.useEffect(() => {
+    if (user) {
+      navigate("/homepage", { replace: true });
+    }
+  }, [user, navigate]);
+
+  const onGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      toast.success("User logged in successfully");
+
+      // Check if user profile exists in Firestore
+      const userRef = doc(db, "users", user.uid);
+      const snap = await getDoc(userRef);
+      if (!snap.exists()) {
+        // New user: create profile and redirect to profile form
+        await setDoc(userRef, {
+          name: user.displayName,
+          email: user.email,
+          avatarUrl: user.photoURL,
+          bio: "",
+          skills: [],
+          strengths: [],
+        });
+        navigate("/createnewprofile");
+      } else {
+        navigate("/homepage");
+      }
+    } catch (error) {
+      toast.error(error.message);
+      console.log(error);
+    }
   };
+
   return (
     <Fragment>
       <ToastContainer />
       <Stack
         sx={{
-          height: "100vh",
+          height: "100%",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
         }}
       >
         <img
-          style={{ marginTop: "5rem" }}
+          style={{ marginTop: "3rem" }}
           width="400px"
           src="src/assets/ChatGPT Image Sep 5, 2025, 04_04_59 PM.png"
           alt=""

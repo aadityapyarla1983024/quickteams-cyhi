@@ -1,31 +1,48 @@
-import React from "react";
-import { Box, Card, CardContent, Typography, Stack, Chip, Divider } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { db } from "../firebase";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { useAuth } from "../contexts/AuthContext";
+import { Box, Typography, Stack, Card, CardContent, Chip, Divider } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export default function MyTeamsPage() {
-  // Example data (replace with Firestore query for user's teams)
-  const myTeams = [
-    {
-      id: "team1",
-      name: "Hackathon Avengers",
-      eventKey: "hack2025",
-      description: "Building AI-powered productivity tools.",
-      status: "present", // "present" or "past"
-    },
-    {
-      id: "team2",
-      name: "Code Ninjas",
-      eventKey: "mlfest2024",
-      description: "Focused on deep learning research.",
-      status: "past",
-    },
-    {
-      id: "team3",
-      name: "Design Sprint Crew",
-      eventKey: "uiuxjam2025",
-      description: "Prototyping apps with Figma + React.",
-      status: "present",
-    },
-  ];
+  const { user } = useAuth();
+  const [myTeams, setMyTeams] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function fetchMyTeams() {
+      if (!user) return;
+      const q = query(collection(db, "teams"), where("memberIds", "array-contains", user.uid));
+      const snapshot = await getDocs(q);
+      const teams = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setMyTeams(teams);
+    }
+    fetchMyTeams();
+  }, [user]);
+
+  // Helper to determine status based on event date
+  const getStatus = (team) => {
+    if (!team.date) return "Past"; // If no date, treat as Past
+    let eventDate;
+
+    if (team.date.toDate) {
+      // Firestore Timestamp
+      eventDate = team.date.toDate();
+    } else {
+      // Date stored as string or JS Date
+      eventDate = new Date(team.date);
+    }
+
+    const now = new Date();
+    // If event date < today’s date, mark as past; else present
+    return eventDate < now ? "Past" : "Present";
+  };
+
+  // Handler for clicking a team card
+  const handleCardClick = (teamId) => {
+    navigate(`/teamdetails/${teamId}`);
+  };
 
   return (
     <Box sx={{ width: "90%", mx: "auto", mt: "5%" }}>
@@ -34,38 +51,45 @@ export default function MyTeamsPage() {
       </Typography>
 
       <Stack spacing={2}>
-        {myTeams.map((team) => (
-          <Card key={team.id} sx={{ borderRadius: 1, boxShadow: 3 }}>
-            <CardContent>
-              <Stack direction="row" alignItems="center" justifyContent="space-between">
-                {/* Left side (team info) */}
-                <Box>
-                  <Typography variant="subtitle1" fontWeight="bold">
-                    {team.name}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Event: {team.eventKey}
-                  </Typography>
-                  <Typography variant="body2">{team.description}</Typography>
-                </Box>
+        {myTeams.map((team) => {
+          const status = getStatus(team);
+          return (
+            <Card
+              key={team.id}
+              sx={{ borderRadius: 1, boxShadow: 3, cursor: "pointer" }}
+              onClick={() => handleCardClick(team.id)}
+            >
+              <CardContent>
+                <Stack direction="row" alignItems="center" justifyContent="space-between">
+                  {/* Left side (team info) */}
+                  <Box>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      {team.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Event: {team.eventKey}
+                    </Typography>
+                    <Typography variant="body2">{team.description}</Typography>
+                  </Box>
 
-                {/* Right side (status) */}
-                <Chip
-                  label={team.status === "present" ? "Present" : "Past"}
-                  color={team.status === "present" ? "success" : "default"}
-                  variant="outlined"
-                  sx={{
-                    fontSize: "1rem",
-                    height: 40,
-                    px: 2,
-                    borderRadius: 2,
-                  }}
-                />
-              </Stack>
-            </CardContent>
-            <Divider />
-          </Card>
-        ))}
+                  {/* Right side (status) */}
+                  <Chip
+                    label={status}
+                    color={status === "Present" ? "success" : "default"}
+                    variant="outlined"
+                    sx={{
+                      fontSize: "1rem",
+                      height: 40,
+                      px: 2,
+                      borderRadius: 2,
+                    }}
+                  />
+                </Stack>
+              </CardContent>
+              <Divider />
+            </Card>
+          );
+        })}
       </Stack>
     </Box>
   );

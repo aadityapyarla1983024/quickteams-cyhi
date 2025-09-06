@@ -8,80 +8,79 @@ import BioInput from "../components/bioinput";
 import TeamMatchAutocomplete from "../components/chipinput";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-export default function InitialProfileForm() {
+export default function UserProfileView() {
   const { user, profile } = useAuth();
-  const [avatarSrc, setAvatarSrc] = useState(profile?.avatarUrl);
-  const [userData, setUserData] = useState(
-    profile || {
-      name: "",
-      email: "",
-      bio: "",
-      skills: [],
-      strengths: [],
-      avatarUrl: "",
-    }
-  );
+  const [avatarSrc, setAvatarSrc] = useState("");
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+    bio: "",
+    skills: [],
+    strengths: [],
+    avatarUrl: "",
+  });
   const navigate = useNavigate();
 
+  // Sync inputs with Firestore profile on load/updates
   useEffect(() => {
-    if (user) {
-      setUserData((prev) => ({
-        ...prev,
-        name: user.displayName,
-        email: user.email,
-      }));
-      setAvatarSrc(user.photoURL);
+    if (profile) {
+      setUserData({
+        name: profile.name || "",
+        email: profile.email || (user?.email ?? ""),
+        bio: profile.bio || "",
+        skills: profile.skills || [],
+        strengths: profile.strengths || [],
+        avatarUrl: profile.avatarUrl || "",
+      });
+      setAvatarSrc(profile.avatarUrl || user?.photoURL || "");
     }
-  }, [user]);
+  }, [profile, user]);
 
-  const onSubmit = async (name, value) => {
+  const onSubmit = (name, value) => {
     setUserData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Avatar upload handler
   const handleAvatarChange = async (event) => {
     const file = event.target.files?.[0];
     if (!file || !user) return;
 
-    // Preview avatar
+    // Instant preview
     const reader = new FileReader();
-    reader.onload = () => {
-      setAvatarSrc(reader.result);
-    };
+    reader.onload = () => setAvatarSrc(reader.result);
     reader.readAsDataURL(file);
 
-    // Upload avatar to Firebase Storage and update user profile
+    // Upload avatar
     try {
       const storage = getStorage();
       const avatarRef = ref(storage, `avatars/${user.uid}`);
       await uploadBytes(avatarRef, file);
       const downloadURL = await getDownloadURL(avatarRef);
-
-      // Save avatar URL to Firestore
       setAvatarSrc(downloadURL);
-      setUserData((prev) => ({
-        ...prev,
-        avatarUrl: downloadURL,
-      }));
-
-      // Also update user's photoURL in Firebase Authentication if needed
-      // Not strictly necessary unless you want auth photoURL to change!
+      setUserData((prev) => ({ ...prev, avatarUrl: downloadURL }));
     } catch (error) {
       console.error("Error uploading avatar:", error);
     }
   };
 
   const handleProfileSubmit = async () => {
-    if (!user) return;
-    await setDoc(
-      doc(db, "users", user.uid),
-      {
-        ...userData,
-        avatarUrl: avatarSrc,
-      },
-      { merge: true }
-    );
-    navigate("/homepage");
+    if (!user) {
+      alert("User not logged in");
+      return;
+    }
+    try {
+      await setDoc(
+        doc(db, "users", user.uid),
+        {
+          ...userData,
+          avatarUrl: avatarSrc,
+        },
+        { merge: true }
+      );
+      navigate("/homepage");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("Failed to update profile");
+    }
   };
 
   return (
@@ -119,12 +118,23 @@ export default function InitialProfileForm() {
           />
         </ButtonBase>
 
-        <TextField disabled id="name" value={userData.name} label="Name" variant="outlined" />
-        <TextField id="email" value={userData.email} label="Email" disabled variant="outlined" />
-        <BioInput handleSubmit={onSubmit} />
+        <TextField
+          id="name"
+          label="Name"
+          variant="outlined"
+          value={userData.name}
+          onChange={(e) => setUserData((prev) => ({ ...prev, name: e.target.value }))}
+        />
+        <TextField id="email" label="Email" variant="outlined" value={userData.email} disabled />
+        <BioInput handleSubmit={onSubmit} userbio={userData.bio} />
         <Stack spacing={2}>
-          <TeamMatchAutocomplete handleSubmit={onSubmit} name="Skills" />
+          <TeamMatchAutocomplete
+            handleSubmit={onSubmit}
+            initialValueSkills={userData.skills}
+            initialValueStrengths={userData.strengths}
+          />
         </Stack>
+
         <Stack>
           <Button
             onClick={handleProfileSubmit}

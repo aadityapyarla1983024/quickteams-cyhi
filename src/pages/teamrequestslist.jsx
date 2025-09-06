@@ -1,37 +1,57 @@
-import React from "react";
-import { Box, Card, CardContent, Typography, Stack, IconButton, Divider } from "@mui/material";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
-import { Button } from "@mui/material";
+import React, { Fragment, useEffect, useState } from "react";
+import { db } from "../firebase";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+} from "firebase/firestore";
+import { useAuth } from "../contexts/AuthContext";
+import { Box, Card, CardContent, Typography, Stack, Button, Divider } from "@mui/material";
+
 export default function TeamRequestsPage() {
-  const requests = [
-    {
-      id: "req1",
-      userName: "Alice Johnson",
-      description: "Frontend Developer skilled in React & TypeScript",
-    },
-    {
-      id: "req2",
-      userName: "Ravi Kumar",
-      description: "Backend Node.js & MongoDB, loves system design",
-    },
-    {
-      id: "req3",
-      userName: "Sophia Lee",
-      description: "UI/UX Designer with Figma expertise",
-    },
-  ];
+  const { user } = useAuth();
+  const [requests, setRequests] = useState([]);
 
-  const handleAccept = (id) => {
-    console.log("Accepted request:", id);
-    // TODO: Firestore update
+  useEffect(() => {
+    async function fetchRequests() {
+      // Fetch teams created/joined by current user
+      const teamsSnap = await getDocs(
+        query(collection(db, "teams"), where("memberIds", "array-contains", user.uid))
+      );
+      const requestsArr = [];
+      for (const teamDoc of teamsSnap.docs) {
+        const pending = teamDoc.data().pendingRequests || [];
+        for (const reqUid of pending) {
+          // Optionally, fetch user profile info for requests
+          requestsArr.push({ teamId: teamDoc.id, userId: reqUid, team: teamDoc.data() });
+        }
+      }
+      setRequests(requestsArr);
+    }
+    fetchRequests();
+  }, [user]);
+
+  const handleAccept = async (teamId, userId) => {
+    const teamRef = doc(db, "teams", teamId);
+    await updateDoc(teamRef, {
+      memberIds: arrayUnion(userId),
+      pendingRequests: arrayRemove(userId),
+    });
   };
 
-  const handleReject = (id) => {
-    console.log("Rejected request:", id);
-    // TODO: Firestore update
+  const handleReject = async (teamId, userId) => {
+    const teamRef = doc(db, "teams", teamId);
+    await updateDoc(teamRef, {
+      pendingRequests: arrayRemove(userId),
+    });
   };
 
+  // UI unchanged (map over requests state)
   return (
     <Box sx={{ width: "90%", mx: "auto", mt: "5%" }}>
       <Typography variant="h2" gutterBottom>

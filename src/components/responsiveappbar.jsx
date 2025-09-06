@@ -8,16 +8,23 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+import { Link, useNavigate } from "react-router-dom";
+import { auth } from "../firebase";
+import { signOut } from "firebase/auth";
 import "./appbar.css";
 
-const settings = ["Profile", "Dashboard", "Logout"];
+const settingsLoggedIn = [
+  { label: "Profile", route: "/profile" },
+  { label: "MyTeams ", route: "/teamsjoined" },
+  { label: "Logout", action: "logout" },
+];
 
-function ResponsiveAppBar({ toggleDrawer }) {
+function ResponsiveAppBar({ toggleDrawer, user, profile }) {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const navigate = useNavigate();
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -25,6 +32,17 @@ function ResponsiveAppBar({ toggleDrawer }) {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleMenuClick = (setting) => {
+    handleCloseUserMenu();
+    if (setting.action === "logout") {
+      signOut(auth).then(() => {
+        navigate("/");
+      });
+    } else if (setting.route) {
+      navigate(setting.route);
+    }
   };
 
   return (
@@ -35,8 +53,8 @@ function ResponsiveAppBar({ toggleDrawer }) {
           <Typography
             variant="h6"
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+            component={Link}
+            to="/homepage"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -52,10 +70,8 @@ function ResponsiveAppBar({ toggleDrawer }) {
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={() => toggleDrawer(true)()}
+              aria-label="open navigation drawer"
+              onClick={toggleDrawer(true)}
               color="inherit"
             >
               <MenuIcon />
@@ -65,8 +81,8 @@ function ResponsiveAppBar({ toggleDrawer }) {
           <Typography
             variant="h5"
             noWrap
-            component="a"
-            href="/homepage"
+            component={Link}
+            to="/homepage"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -81,38 +97,36 @@ function ResponsiveAppBar({ toggleDrawer }) {
             QuickTeams
           </Typography>
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              R
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: "center" }}>{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+            {user && (
+              <>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar alt={profile?.name ?? "User"} src={profile?.avatarUrl ?? ""} />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                  keepMounted
+                  transformOrigin={{ vertical: "top", horizontal: "right" }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settingsLoggedIn.map((setting) => (
+                    <MenuItem key={setting.label} onClick={() => handleMenuClick(setting)}>
+                      <Typography textAlign="center">{setting.label}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </>
+            )}
           </Box>
         </Toolbar>
       </Container>
     </AppBar>
   );
 }
+
 export default ResponsiveAppBar;

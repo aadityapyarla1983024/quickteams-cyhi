@@ -1,5 +1,4 @@
 import React, { Fragment } from "react";
-import FCAppBar from "../components/FCAppBar";
 import { Card, CardContent, Typography, Box, Stack, Chip } from "@mui/material";
 import { Button } from "@mui/material";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
@@ -7,9 +6,8 @@ import { Link } from "react-router-dom";
 export default function HomePage() {
   return (
     <Fragment>
-      <FCAppBar />
-      <Box sx={{ mt: "5rem" }} className="elegant-container">
-        <Card className="elegant-card">
+      <Box sx={{ width: "80%", mx: "auto", mt: "3rem" }} className="elegant-container">
+        <Card sx={{ p: "2rem 3rem" }} className="elegant-card">
           <CardContent>
             <Typography variant="h1" className="team-title">
               Browse Teams
@@ -35,8 +33,8 @@ export default function HomePage() {
           </CardContent>
         </Card>
       </Box>
-      <Box sx={{ mt: "1.5rem" }} className="elegant-container">
-        <Card className="elegant-card">
+      <Box sx={{ width: "80%", mx: "auto", mt: "2rem" }} className="elegant-container">
+        <Card sx={{ p: "2rem 3rem" }} className="elegant-card">
           <CardContent>
             <Typography variant="h1" className="team-title">
               Create Teams

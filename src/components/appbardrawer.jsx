@@ -9,51 +9,52 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
-import { Fragment } from "@emotion/react/jsx-runtime";
+import { Fragment } from "react";
+import { Link } from "react-router-dom";
 
 export default function DropDownNav({ open, toggleDrawer }) {
+  const navItems = [
+    { label: "Browse Teams", to: "/selectteams" },
+    { label: "Float Team", to: "/floatnewteam" },
+    { label: "Events", to: "/events" }, // update route as needed
+  ];
+
   const DrawerList = (
     <Box
       sx={{ width: "100vw", height: "100%", backgroundColor: "black" }}
       role="presentation"
       onClick={toggleDrawer(false)}
     >
-      <List>
-        {["Browse Teams", "Float Team", "Events"].map((text, index) => (
-          <Fragment>
-            <ListItem key={text}>
-              <ListItemButton>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
+      <List sx={{ mt: "60%", width: "60%", mx: "auto" }}>
+        {navItems.map(({ label, to }, index) => (
+          <Fragment key={label}>
+            <ListItem disablePadding>
+              <ListItemButton
+                component={Link}
+                to={to}
+                sx={{ color: "white", textDecoration: "none" }}
+              >
+                <ListItemIcon sx={{ color: "white" }}>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
+                <ListItemText primary={label} />
               </ListItemButton>
             </ListItem>
-            <Divider />
+            <Divider sx={{ backgroundColor: "gray" }} />
           </Fragment>
         ))}
       </List>
-      {/* <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List> */}
     </Box>
   );
 
   return (
-    <div>
-      <Drawer
-        sx={{ backgroundColor: "black" }}
-        open={open}
-        anchor="left"
-        onClose={toggleDrawer(false)}
-      >
-        {DrawerList}
-      </Drawer>
-    </div>
+    <Drawer
+      sx={{ backgroundColor: "black" }}
+      open={open}
+      anchor="left"
+      onClose={toggleDrawer(false)}
+    >
+      {DrawerList}
+    </Drawer>
   );
 }
