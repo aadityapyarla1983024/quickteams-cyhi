@@ -64,7 +64,7 @@ export default function LogoutFirstPage() {
         <img
           style={{ marginTop: "3rem" }}
           width="400px"
-          src="src/assets/ChatGPT Image Sep 5, 2025, 04_04_59 PM.png"
+          src="/ChatGPT Image Sep 5, 2025, 04_04_59 PM.png"
           alt=""
         />
         <Button
