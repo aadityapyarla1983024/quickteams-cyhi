@@ -9,7 +9,6 @@ This Progressive Web Application (PWA) is designed to streamline team formation,
 - **User Authentication and Profiles:** Secure login and personalized user profiles with skill and strength tags.
 - **Team Creation & Management:** Create new hackathon teams with detailed metadata including skills required, strengths, max members, event info, and venue.
 - **Team Browsing & Joining:** Explore available teams and join those that match your expertise.
-- **Member Requests & Approvals:** Handle join requests and approvals seamlessly.
 - **Team Details & Editing:** View detailed team information and edit team properties.
 - **Member Leave & Team Deletion:** Allow members to leave teams, with automatic deletion if last member exits.
 - **Responsive PWA:** Works smoothly across devices and supports installation as a PWA.
@@ -111,8 +110,7 @@ This Progressive Web Application (PWA) is designed to streamline team formation,
 
 ## Contributors
 
-- Your Name — Developer & Architect
-- Team Members — Roles (if applicable)
+- Aaditya Pyarla, Raja Kumar, Rahul Nagar — Developer & Architect
 
 ---
 
@@ -124,7 +122,7 @@ MIT License
 
 ## Contact
 
-For questions or collaboration, contact [Your Email] or open an issue on GitHub.
+For questions or collaboration, contact aaditya.pyarla@gmail.com or open an issue on GitHub.
 
 ---
 
