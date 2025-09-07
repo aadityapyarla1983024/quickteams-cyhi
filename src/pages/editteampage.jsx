@@ -170,7 +170,7 @@ export default function TeamEditPage() {
           />
 
           <Box textAlign="center" mt={3}>
-            <Button variant="contained" sx={{ width: "40%" }} onClick={handleUpdate}>
+            <Button variant="contained" sx={{ width: "70%" }} onClick={handleUpdate}>
               Save Changes
             </Button>
           </Box>

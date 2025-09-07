@@ -14,9 +14,9 @@ import { Link } from "react-router-dom";
 
 export default function DropDownNav({ open, toggleDrawer }) {
   const navItems = [
+    { label: "Home", to: "/homepage" }, // update route as needed
     { label: "Browse Teams", to: "/selectteams" },
-    { label: "Float Team", to: "/floatnewteam" },
-    { label: "Events", to: "/events" }, // update route as needed
+    { label: "Create Team", to: "/floatnewteam" },
   ];
 
   const DrawerList = (

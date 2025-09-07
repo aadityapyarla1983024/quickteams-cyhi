@@ -214,7 +214,14 @@ export default function TeamDetailsPage() {
               <Typography variant="h6" gutterBottom>
                 Team Members
               </Typography>
-              <Stack direction="row" spacing={3} mt={2} flexWrap="wrap" gap={3}>
+              <Stack
+                sx={{ display: "flex", justifyContent: "center" }}
+                direction="row"
+                spacing={3}
+                mt={2}
+                flexWrap="wrap"
+                gap={3}
+              >
                 {members.length > 0 ? (
                   members.map((member) => (
                     <Stack

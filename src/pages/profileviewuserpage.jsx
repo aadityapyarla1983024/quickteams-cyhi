@@ -138,7 +138,7 @@ export default function UserProfileView() {
         <Stack>
           <Button
             onClick={handleProfileSubmit}
-            sx={{ width: "45%", mx: "auto" }}
+            sx={{ width: "60%", mx: "auto" }}
             variant="contained"
           >
             Submit

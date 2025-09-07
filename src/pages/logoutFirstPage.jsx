@@ -74,7 +74,7 @@ export default function LogoutFirstPage() {
             color: "black",
             background: "white",
             mb: 10,
-            width: "40%",
+            width: "70%",
             mx: "auto",
           }}
           variant="contained"

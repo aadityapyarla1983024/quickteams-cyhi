@@ -72,7 +72,7 @@ export default function TeamCreateForm() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Fragment>
-        <Stack spacing={3} sx={{ width: "70%", mx: "auto", mt: "5%" }}>
+        <Stack spacing={3} sx={{ width: "70%", mx: "auto", mt: "5%", mb: "3rem" }}>
           <Typography variant="h5" align="center">
             Create a Team
           </Typography>
@@ -160,7 +160,7 @@ export default function TeamCreateForm() {
 
           {/* Submit Button */}
           <Box textAlign="center">
-            <Button variant="contained" sx={{ width: "40%" }} onClick={handleSubmit}>
+            <Button variant="contained" sx={{ width: "70%" }} onClick={handleSubmit}>
               Create Team
             </Button>
           </Box>

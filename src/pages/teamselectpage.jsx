@@ -106,7 +106,6 @@ export default function TeamSelectPage() {
 
   return (
     <Fragment>
-      <FCAppBar />
       <Box sx={{ width: "90%", mx: "auto", mt: "20%" }} className="elegant-container">
         <Card sx={{ p: "2rem 3rem" }} className="elegant-card">
           <CardContent>
@@ -160,7 +159,7 @@ export default function TeamSelectPage() {
               <Typography variant="subtitle2" className="chip-label">
                 Skills Required:
               </Typography>
-              <Stack direction="row" spacing={1} flexWrap="wrap" mt={0.5}>
+              <Stack useFlexGap direction="row" spacing={1} flexWrap="wrap" mt={0.5}>
                 {(currentTeam.skillsRequired ?? []).map((skill) => (
                   <Chip
                     key={skill}
@@ -175,7 +174,7 @@ export default function TeamSelectPage() {
               <Typography variant="subtitle2" className="chip-label">
                 Strengths Required:
               </Typography>
-              <Stack direction="row" spacing={1} flexWrap="wrap" mt={0.5}>
+              <Stack useFlexGap direction="row" spacing={1} flexWrap="wrap" mt={0.5}>
                 {(currentTeam.strengthsRequired ?? []).map((strength) => (
                   <Chip
                     key={strength}

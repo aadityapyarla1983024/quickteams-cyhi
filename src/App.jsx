@@ -12,11 +12,12 @@ import { AuthProvider } from "./contexts/AuthContext";
 import UserProfileView from "./pages/profileviewuserpage";
 import RequireAuth from "./contexts/authrequired";
 import TeamEditPage from "./pages/editteampage";
-
+import InstallPWA from "./components/installPWA";
 export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <InstallPWA />
         <FCAppBar />
         <Routes>
           {/* Public route */}

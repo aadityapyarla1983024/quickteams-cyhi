@@ -14,7 +14,8 @@ export default defineConfig({
       manifest: {
         name: "My React PWA",
         short_name: "PWA",
-        theme_color: "#ffffff",
+        theme_color: "#0e0e0e",
+        background_color: "0e0e0e",
         display: "standalone", // Set the display mode to standalone
         start_url: ".",
         icons: [
